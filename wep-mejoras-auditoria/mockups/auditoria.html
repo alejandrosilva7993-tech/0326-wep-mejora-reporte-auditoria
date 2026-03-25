@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1920, height=1080" />
+  <title>WMS — Auditoría (mockup)</title>
+  <style>
+    :root {
+      --shell: #333e48;
+      --accent-red: #d32f2f;
+      --cta-blue: #1976d2;
+      --content-bg: #eceff1;
+      --surface: #ffffff;
+      --text: #37474f;
+      --text-muted: #78909c;
+      --border: #cfd8dc;
+      --zebra: #f5f7f8;
+      --active-bar: #1e88e5;
+      --sidebar-active-bg: rgba(255, 255, 255, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #000;
+      color: var(--text);
+    }
+
+    .app {
+      width: 1920px;
+      height: 1080px;
+      display: flex;
+      flex-direction: column;
+      background: var(--content-bg);
+    }
+
+    /* —— Top bar —— */
+    .topbar {
+      height: 56px;
+      min-height: 56px;
+      background: var(--shell);
+      display: flex;
+      align-items: center;
+      padding: 0 12px 0 0;
+      gap: 16px;
+    }
+
+    .logo-block {
+      width: 56px;
+      height: 56px;
+      background: var(--accent-red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .logo-block span {
+      color: #fff;
+      font-weight: 800;
+      font-size: 28px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      line-height: 1.15;
+      min-width: 200px;
+    }
+
+    .brand strong {
+      color: #fff;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .brand small {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 11px;
+      font-weight: 400;
+    }
+
+    .topbar-spacer {
+      flex: 1;
+    }
+
+    .search-global {
+      display: flex;
+      align-items: center;
+      background: var(--surface);
+      border-radius: 999px;
+      padding: 0 14px 0 16px;
+      height: 36px;
+      width: 280px;
+      gap: 8px;
+    }
+
+    .search-global input {
+      border: 0;
+      outline: none;
+      flex: 1;
+      font-size: 13px;
+      color: var(--text);
+      background: transparent;
+    }
+
+    .search-global input::placeholder {
+      color: #9e9e9e;
+    }
+
+    .pill-select {
+      display: flex;
+      align-items: center;
+      background: #546e7a;
+      color: #fff;
+      border-radius: 999px;
+      height: 36px;
+      padding: 0 14px;
+      font-size: 13px;
+      gap: 8px;
+      border: none;
+      cursor: default;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: default;
+      position: relative;
+    }
+
+    .badge {
+      position: absolute;
+      top: 4px;
+      right: 2px;
+      background: var(--accent-red);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      min-width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #b0bec5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 8px;
+    }
+
+    /* —— Body row —— */
+    .body-row {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+    }
+
+    .sidebar {
+      width: 56px;
+      background: var(--shell);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 8px;
+      gap: 4px;
+    }
+
+    .nav-item {
+      width: 44px;
+      height: 44px;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, 0.9);
+      cursor: default;
+      position: relative;
+    }
+
+    .nav-item svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.75;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .nav-item.active {
+      background: var(--sidebar-active-bg);
+    }
+
+    .nav-item.active::before {
+      content: "";
+      position: absolute;
+      left: -6px;
+      top: 8px;
+      bottom: 8px;
+      width: 4px;
+      background: var(--active-bar);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .main {
+      flex: 1;
+      padding: 24px 40px 32px;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .page-title {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 24px;
+      letter-spacing: 0.01em;
+    }
+
+    .filter-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 20px 24px 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      margin-bottom: 20px;
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 20px 24px;
+      align-items: end;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .field select {
+      width: 100%;
+      height: 40px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0 36px 0 14px;
+      font-size: 13px;
+      color: var(--text);
+      background: var(--surface);
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2378909c' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+    }
+
+    .btn-buscar {
+      height: 40px;
+      padding: 0 22px;
+      background: var(--cta-blue);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: default;
+      white-space: nowrap;
+    }
+
+    .btn-buscar svg {
+      width: 18px;
+      height: 18px;
+      stroke: #fff;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .table-wrap {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 16px 20px 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .table-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .filtro-global {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      font-size: 13px;
+      cursor: default;
+    }
+
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .table-scroll {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 10px 12px;
+      font-weight: 600;
+      color: var(--text);
+      background: #fafafa;
+      border-bottom: 1px solid var(--border);
+      vertical-align: bottom;
+    }
+
+    thead th:first-child {
+      width: 44px;
+      text-align: center;
+    }
+
+    .filter-row td {
+      padding: 8px 10px;
+      background: #fafafa;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .filter-row input {
+      width: 100%;
+      height: 32px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0 14px;
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    .filter-row input::placeholder {
+      color: #b0bec5;
+    }
+
+    tbody tr:nth-child(even) {
+      background: var(--zebra);
+    }
+
+    tbody tr:nth-child(odd) {
+      background: var(--surface);
+    }
+
+    tbody td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    tbody td:first-child {
+      text-align: center;
+    }
+
+    .estado {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .estado.pendiente {
+      background: #fff3e0;
+      color: #e65100;
+    }
+
+    .estado.completada {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .acciones {
+      display: flex;
+      gap: 8px;
+    }
+
+    .acciones button {
+      padding: 6px 12px;
+      font-size: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: 8px;
+      color: var(--cta-blue);
+      font-weight: 600;
+      cursor: default;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="logo-block" aria-hidden="true"><span>W</span></div>
+      <div class="brand">
+        <strong>Warehouse</strong>
+        <small>Efficiency and productivity</small>
+      </div>
+      <div class="topbar-spacer"></div>
+      <div class="search-global">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9e9e9e" stroke-width="2">
+          <circle cx="11" cy="11" r="7" />
+          <path d="M21 21l-4.3-4.3" />
+        </svg>
+        <input type="text" placeholder="Busca en (producto)" readonly />
+      </div>
+      <button type="button" class="pill-select" aria-label="Contexto">
+        Default
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      </button>
+      <button type="button" class="icon-btn" aria-label="Notificaciones">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.75">
+          <path d="M18 8a6 6 0 10-12 0c0 7-3 7-3 7h18s-3 0-3-7" />
+          <path d="M13.73 21a2 2 0 01-3.46 0" />
+        </svg>
+        <span class="badge">4</span>
+      </button>
+      <div class="avatar" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+        </svg>
+      </div>
+    </header>
+
+    <div class="body-row">
+      <nav class="sidebar" aria-label="Módulos">
+        <button type="button" class="nav-item" title="Menú">
+          <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+        </button>
+        <button type="button" class="nav-item" title="Inicio">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><path d="M9 22V12h6v10" /></svg>
+        </button>
+        <button type="button" class="nav-item" title="Ajustes">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" /></svg>
+        </button>
+        <button type="button" class="nav-item" title="Inventario">
+          <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
+        </button>
+        <button type="button" class="nav-item active" title="Auditoría">
+          <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" /></svg>
+        </button>
+        <button type="button" class="nav-item" title="Intercambio">
+          <svg viewBox="0 0 24 24"><path d="M7 16V4M7 4L3 8M7 4l4 4M17 8v12M17 20l4-4M17 20l-4-4" /></svg>
+        </button>
+        <button type="button" class="nav-item" title="Documentos">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" /></svg>
+        </button>
+        <button type="button" class="nav-item" title="Salida">
+          <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" /></svg>
+        </button>
+        <button type="button" class="nav-item" title="Entrada">
+          <svg viewBox="0 0 24 24"><path d="M12 3v12M8 11l4 4 4-4M3 21h18" /></svg>
+        </button>
+        <button type="button" class="nav-item" title="Transporte">
+          <svg viewBox="0 0 24 24"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-3M5 18a2 2 0 100 4 2 2 0 000-4zm12 0a2 2 0 100 4 2 2 0 000-4z" /></svg>
+        </button>
+      </nav>
+
+      <main class="main">
+        <h1 class="page-title">Auditoría</h1>
+
+        <section class="filter-card" aria-label="Filtros de auditoría">
+          <div class="filter-grid">
+            <div class="field">
+              <label for="f-fecha">Fecha de auditoría:</label>
+              <select id="f-fecha">
+                <option>Últimos 30 días</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-auditor">Auditor:</label>
+              <select id="f-auditor">
+                <option>Todos los auditores</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-estado">Estado:</label>
+              <select id="f-estado">
+                <option>Todos</option>
+              </select>
+            </div>
+            <button type="button" class="btn-buscar">
+              Buscar
+              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>
+            </button>
+          </div>
+        </section>
+
+        <section class="table-wrap" aria-label="Listado de auditorías">
+          <div class="table-toolbar">
+            <span>Mostrando 1 a 3 de 3 registros</span>
+            <div class="toolbar-right">
+              <span class="filtro-global">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="M21 21l-4.3-4.3" />
+                </svg>
+                Filtro global
+              </span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5">
+                <rect x="3" y="3" width="7" height="7" rx="1" />
+                <rect x="14" y="3" width="7" height="7" rx="1" />
+                <rect x="3" y="14" width="7" height="7" rx="1" />
+                <rect x="14" y="14" width="7" height="7" rx="1" />
+              </svg>
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th><input type="checkbox" aria-label="Seleccionar todo" /></th>
+                  <th>ID auditoría</th>
+                  <th>Fecha</th>
+                  <th>Auditor</th>
+                  <th>Referencia</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+                <tr class="filter-row">
+                  <td></td>
+                  <td><input type="text" placeholder="Filtrar" readonly /></td>
+                  <td><input type="text" placeholder="Filtrar" readonly /></td>
+                  <td><input type="text" placeholder="Filtrar" readonly /></td>
+                  <td><input type="text" placeholder="Filtrar" readonly /></td>
+                  <td><input type="text" placeholder="Filtrar" readonly /></td>
+                  <td><input type="text" placeholder="Filtrar" readonly /></td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="checkbox" aria-label="Fila 1" /></td>
+                  <td>AUD-2025-0142</td>
+                  <td>18/03/2025</td>
+                  <td>María López</td>
+                  <td>INV-BODEGA-A</td>
+                  <td><span class="estado pendiente">Pendiente</span></td>
+                  <td class="acciones"><button type="button">Ver</button></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" aria-label="Fila 2" /></td>
+                  <td>AUD-2025-0141</td>
+                  <td>17/03/2025</td>
+                  <td>Carlos Ruiz</td>
+                  <td>REC-88921</td>
+                  <td><span class="estado completada">Completada</span></td>
+                  <td class="acciones"><button type="button">Ver</button></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" aria-label="Fila 3" /></td>
+                  <td>AUD-2025-0140</td>
+                  <td>15/03/2025</td>
+                  <td>Ana Torres</td>
+                  <td>TRF-5520</td>
+                  <td><span class="estado pendiente">Pendiente</span></td>
+                  <td class="acciones"><button type="button">Ver</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

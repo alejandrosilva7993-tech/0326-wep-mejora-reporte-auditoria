@@ -1,0 +1,1927 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WEP — Reporte de Auditoría (maqueta)</title>
+  <!-- Fuentes alineadas a Figma: Inter (título, chips), Roboto (tabla, botones) — nombres desde get_design_context file jbEGs76M0pIetekOn2bgyR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      /* Tokens desde diseño Figma 0326-WEP-Mejoras-auditoría (node 0:437) */
+      --canvas-bg: #fafafa;
+      --shell: #334b5d;
+      --shell-accent: #f5333f;
+      --text-net-64: #596c7b;
+      --text-net-100: #00263a;
+      --text-muted: #94a0aa;
+      --divider: #dee2e6;
+      --input-border: #d6d6d6;
+      --surface: #ffffff;
+      --table-header-bg: #f6f6f6;
+      --row-alt: #f6f6f6;
+      --chip-text: #334b5d;
+      --cta-blue: #2196f3;
+      --badge-error: #b32b23;
+      --badge-auditada: #188a42;
+      --badge-pendiente: #677884;
+      --badge-en-auditoria: #c18b00;
+      --shadow-chip: 0 4px 4px rgba(0, 0, 0, 0.25);
+      --filtrar-border: #707070;
+      --filtrar-pill-text: #888888;
+      /* Fila activo rail (gris azulado Figma); menú hamburguesa en topbar; cuerpo rail = --text-net-100 */
+      --sidebar-selected: #52606f;
+      /* Apilamiento alineado a capas Figma (Group 15925) */
+      --z-chrome: 1;
+      --z-os-taskbar: 2;
+      --z-app-shell: 5;
+      --z-topbar: 15;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Roboto", system-ui, sans-serif;
+      background: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    /* Lienzo 1366×768 */
+    .prototype {
+      width: 1366px;
+      height: 768px;
+      background: var(--canvas-bg);
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    /* Cromado desde export Figma → mockups/assets/ (válido en file://) */
+    .chrome-faux--browser {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1366px;
+      height: 80px;
+      z-index: var(--z-chrome);
+      pointer-events: none;
+      line-height: 0;
+      background: #e8e8e8;
+    }
+
+    .chrome-faux--browser img {
+      width: 1366px;
+      height: 80px;
+      display: block;
+      object-fit: cover;
+      object-position: top center;
+    }
+
+    .chrome-faux--taskbar {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 1366px;
+      height: 55px;
+      z-index: var(--z-os-taskbar);
+      pointer-events: none;
+      line-height: 0;
+      background: #dde6ed;
+    }
+
+    .chrome-faux--taskbar img {
+      width: 1366px;
+      height: 55px;
+      display: block;
+      object-fit: cover;
+      object-position: center bottom;
+    }
+
+    .topbar {
+      position: absolute;
+      left: 0;
+      top: 80px;
+      width: 1366px;
+      height: 64px;
+      z-index: var(--z-topbar);
+      overflow: visible;
+    }
+
+    .topbar__stripe {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      height: 6px;
+      background: var(--shell-accent);
+    }
+
+    /* Top bar: columna 72px alineada al rail; menú centrado como iconos del sidebar */
+    .topbar__main {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 6px;
+      bottom: 0;
+      background: var(--shell);
+      display: flex;
+      align-items: center;
+      padding: 0 24px 0 0;
+      gap: 0;
+      overflow: visible;
+    }
+
+    .topbar__rail {
+      width: 72px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      align-self: stretch;
+    }
+
+    .topbar__menu {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      align-self: center;
+      color: inherit;
+    }
+
+    .topbar__menu img {
+      width: 24px;
+      height: 24px;
+      display: block;
+    }
+
+    .wep-logo {
+      width: 64px;
+      height: 68px;
+      flex-shrink: 0;
+      align-self: flex-end;
+      margin-left: 8px;
+      margin-bottom: -6px;
+      background: var(--shell-accent);
+      border-radius: 0 0 8px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wep-logo img {
+      width: 35px;
+      height: 26px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .brand-text {
+      color: #fff;
+      font-size: 12px;
+      line-height: 1.25;
+      font-family: "Inter", sans-serif;
+      max-width: 220px;
+      padding-top: 1px;
+      margin-left: 24px;
+    }
+
+    .brand-text strong {
+      display: block;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.01em;
+    }
+
+    .topbar__spacer {
+      flex: 1;
+      min-width: 0;
+      margin-left: 24px;
+    }
+
+    .topbar__tools {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-shrink: 0;
+      align-self: center;
+    }
+
+    .search-pill {
+      width: 216px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--canvas-bg);
+      border-radius: 16px;
+      padding: 0 12px 0 14px;
+      box-sizing: border-box;
+      flex-shrink: 0;
+    }
+
+    .topbar__icon-btn {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: inherit;
+    }
+
+    .topbar__icon-btn img {
+      display: block;
+    }
+
+    .topbar__avatar {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      overflow: hidden;
+      line-height: 0;
+    }
+
+    .topbar__avatar img {
+      width: 40px;
+      height: 40px;
+      display: block;
+      object-fit: cover;
+    }
+
+    .search-pill span {
+      flex: 1;
+      min-width: 0;
+      font-family: "Inter", sans-serif;
+      font-size: 14px;
+      color: var(--text-net-64);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .search-pill__icon {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      display: block;
+      opacity: 0.85;
+    }
+
+    .sidebar {
+      position: absolute;
+      left: 0;
+      top: 134px;
+      width: 72px;
+      height: 579px;
+      background: var(--text-net-100);
+      z-index: var(--z-app-shell);
+    }
+
+    /* Rectangle 3623: Net/Net 100 — mismo token que --text-net-100; no usar --shell (#334b5d) del top bar */
+    .sidebar__rail {
+      position: absolute;
+      inset: 0;
+      background: var(--text-net-100);
+    }
+
+    /* Rail: iconos desde el borde superior; ítem 9 = auditoría (Group 15854 en lienzo) */
+    .sidebar__nav {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 72px;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 8px;
+      gap: 8px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .sidebar__icons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sidebar__icon {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+      display: block;
+      object-fit: contain;
+      object-position: center;
+    }
+
+    /* Cuadrado gris del icono activo (mismo token que la franja de selección) */
+    .sidebar__icon-slot--current {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--sidebar-selected);
+      border-radius: 0;
+    }
+
+    .sidebar__icon-slot--current .sidebar__icon {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    /* Fila 9: padding 8 + 8×(40+8) = 392px desde el tope del sidebar */
+    .sidebar__active {
+      position: absolute;
+      left: 0;
+      top: calc(8px + 8 * (40px + 8px));
+      width: 72px;
+      height: 40px;
+      z-index: 1;
+      background: var(--sidebar-selected);
+      border-radius: 0;
+    }
+
+    /* Panel: mismo rect que Figma Frame 15936 (72, 134, 1294×579) */
+    .panel {
+      position: absolute;
+      left: 72px;
+      top: 134px;
+      width: 1294px;
+      height: 579px;
+      overflow: auto;
+      background: var(--canvas-bg);
+      z-index: var(--z-app-shell);
+    }
+
+    .panel__title {
+      text-align: center;
+      font-family: "Inter", sans-serif;
+      font-weight: 600;
+      font-size: 21px;
+      line-height: 21px;
+      color: var(--text-net-64);
+      margin-top: 24px;
+      margin-bottom: 12px;
+    }
+
+    .panel__divider {
+      height: 1px;
+      background: var(--divider);
+      border: 0;
+      margin: 0 40px 12px;
+    }
+
+    .filters-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 0 16px;
+      padding: 0 40px;
+      margin-bottom: 8px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 200px;
+    }
+
+    .field-group label,
+    .field-inline label {
+      font-weight: 700;
+      font-size: 14px;
+      color: #000;
+    }
+
+    .select-like {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--input-border);
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-size: 14px;
+      color: #6c7c8a;
+      min-height: 40px;
+      min-width: 210px;
+    }
+
+    .select-like__chevron {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      display: block;
+      object-fit: contain;
+    }
+
+    .field-inline {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .input-sm {
+      width: 142px;
+      background: var(--surface);
+      border: 1px solid var(--input-border);
+      border-radius: 4px;
+      padding: 11px 12px;
+      font-size: 14px;
+      color: var(--text-net-64);
+      transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .input-sm:hover {
+      border-color: #b0bac1;
+      background: #fafcfc;
+    }
+
+    .input-sm:focus-visible {
+      outline: none;
+      border-color: var(--cta-blue);
+      box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.22);
+    }
+
+    .date-range-picker {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 0 16px;
+      position: relative;
+    }
+
+    .input-sm--date-trigger {
+      cursor: pointer;
+    }
+
+    .date-popover {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      z-index: 60;
+      width: min(308px, calc(100vw - 48px));
+      background: var(--surface);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+      font-family: "Roboto", sans-serif;
+    }
+
+    .date-popover[hidden] {
+      display: none !important;
+    }
+
+    .date-popover__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 12px 8px;
+      gap: 8px;
+    }
+
+    .date-popover__title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-net-100);
+      text-transform: capitalize;
+    }
+
+    .date-popover__nav {
+      display: flex;
+      gap: 0;
+      flex-shrink: 0;
+    }
+
+    .date-popover__nav-btn {
+      border: none;
+      background: transparent;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 22px;
+      line-height: 1;
+      color: var(--text-net-64);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .date-popover__nav-btn:hover {
+      background: var(--row-alt);
+    }
+
+    .date-popover__divider {
+      height: 1px;
+      background: var(--divider);
+      margin: 0 8px;
+    }
+
+    .date-popover__weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      padding: 8px 10px 4px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .date-popover__grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      padding: 4px 8px 8px;
+      gap: 2px;
+    }
+
+    .date-popover__day {
+      min-height: 36px;
+      border: none;
+      background: transparent;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text-net-100);
+      padding: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .date-popover__day.is-outside-month {
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+
+    .date-popover__day:hover:not(:disabled) {
+      background: var(--row-alt);
+    }
+
+    .date-popover__day:disabled,
+    .date-popover__day.is-disabled {
+      opacity: 0.38;
+      cursor: not-allowed;
+      color: var(--text-muted);
+    }
+
+    .date-popover__day:disabled:hover,
+    .date-popover__day.is-disabled:hover {
+      background: transparent;
+    }
+
+    .date-popover__day.is-selected {
+      font-weight: 600;
+      border: 1px solid var(--cta-blue);
+      background: rgba(33, 150, 243, 0.18);
+      border-radius: 50%;
+    }
+
+    .date-popover__day.is-today:not(.is-selected) {
+      font-weight: 600;
+      color: var(--cta-blue);
+    }
+
+    .date-popover__footer {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 12px 12px;
+    }
+
+    .date-popover__link-btn {
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: inherit;
+      color: var(--cta-blue);
+      padding: 4px 8px;
+    }
+
+    .date-popover__link-btn:hover {
+      text-decoration: underline;
+    }
+
+    .btn-buscar {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--cta-blue);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 12px 16px;
+      font-family: "Roboto", sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      cursor: pointer;
+      margin-left: auto;
+      align-self: flex-end;
+      transition: filter 0.15s ease, transform 0.1s ease;
+    }
+
+    .btn-buscar:hover {
+      filter: brightness(0.92);
+    }
+
+    .btn-buscar:active {
+      filter: brightness(0.85);
+      transform: scale(0.98);
+    }
+
+    .btn-buscar__icon {
+      width: 16px;
+      height: 16px;
+      display: block;
+      flex-shrink: 0;
+    }
+
+    /* Tarimas + filtros rápidos */
+    .tarimas-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 40px 8px 15px;
+      flex-wrap: wrap;
+    }
+
+    .tarimas-row__label {
+      font-weight: 700;
+      font-size: 14px;
+      color: #000;
+      min-width: 72px;
+      text-align: right;
+    }
+
+    .tarimas-summary {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: "Inter", sans-serif;
+      font-size: 14px;
+      color: var(--chip-text);
+    }
+
+    .tarimas-summary .n {
+      font-size: 18px;
+    }
+
+    .quick-filters {
+      display: flex;
+      gap: 22px;
+      flex-wrap: wrap;
+    }
+
+    .quick-filter {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 160px;
+      height: 40px;
+      padding: 11px 12px;
+      background: var(--surface);
+      border: none;
+      border-radius: 4px;
+      box-shadow: var(--shadow-chip);
+      cursor: pointer;
+      font-family: "Inter", sans-serif;
+      color: var(--chip-text);
+      text-align: left;
+    }
+
+    .quick-filter:hover {
+      filter: brightness(0.98);
+    }
+
+    .quick-filter.is-active {
+      outline: 2px solid var(--chip-text);
+      outline-offset: 1px;
+    }
+
+    .quick-filter__count {
+      font-weight: 700;
+      font-size: 18px;
+      min-width: 1ch;
+    }
+
+    .quick-filter__text {
+      font-weight: 500;
+      font-size: 14px;
+      flex: 1;
+    }
+
+    .quick-filter__icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      display: block;
+      object-fit: contain;
+    }
+
+    .quick-filter__icon-inline {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .quick-filter__icon-inline svg {
+      width: 24px;
+      height: 24px;
+      display: block;
+      fill: currentColor;
+    }
+
+    .quick-filter--pendientes .quick-filter__icon-inline {
+      color: var(--badge-pendiente);
+    }
+
+    .quick-filter--en-auditoria .quick-filter__icon-inline {
+      color: var(--badge-en-auditoria);
+    }
+
+    /* Toolbar sobre tabla */
+    .table-toolbar {
+      position: relative;
+      height: 81px;
+      margin-top: 8px;
+      border-top: 1px solid var(--divider);
+      border-bottom: 1px solid var(--divider);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      background: var(--surface);
+    }
+
+    .table-toolbar__excel {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: var(--cta-blue);
+      border-radius: 8px;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .table-toolbar__excel img {
+      width: 22px;
+      height: 22px;
+      display: block;
+      object-fit: contain;
+    }
+
+    .filtro-global__icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      display: block;
+      opacity: 0.9;
+    }
+
+    .table-toolbar__hint {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .filtro-global {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 200px;
+    }
+
+    .filtro-global label {
+      font-size: 14px;
+      color: var(--text-net-100);
+    }
+
+    .filtro-global__line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 2px;
+      transition: border-bottom-color 0.15s ease;
+    }
+
+    .filtro-global__line:hover {
+      border-bottom-color: var(--text-muted);
+    }
+
+    .filtro-global__line:focus-within {
+      border-bottom-color: var(--cta-blue);
+    }
+
+    .filtro-global input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .filtro-global input:hover {
+      cursor: text;
+    }
+
+    /* Tabla: scroll horizontal cuando el ancho mínimo supera el panel */
+    .table-scroll {
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: visible;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .table-scroll__inner {
+      min-width: 1400px;
+    }
+
+    /* Cabecera columnas (9 columnas; descripción tras Estatus) */
+    .table-head {
+      display: grid;
+      grid-template-columns: 1.15fr 0.95fr 1fr 1.05fr 1fr minmax(200px, 1.6fr) 1fr 1fr 1fr;
+      gap: 0;
+      background: var(--table-header-bg);
+      border-bottom: 1px solid var(--divider);
+      padding: 0 28px;
+      box-sizing: border-box;
+    }
+
+    .th-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 8px;
+      text-align: center;
+    }
+
+    .th-cell span.title {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--text-net-100);
+    }
+
+    .th-filtrar {
+      border: 1px solid var(--filtrar-border);
+      border-radius: 12px;
+      padding: 5px 28px;
+      font-size: 11px;
+      color: var(--filtrar-pill-text);
+    }
+
+    /* Cuerpo tabla */
+    .table-body {
+      min-height: 200px;
+    }
+
+    .data-row {
+      display: grid;
+      grid-template-columns: 1.15fr 0.95fr 1fr 1.05fr 1fr minmax(200px, 1.6fr) 1fr 1fr 1fr;
+      gap: 0;
+      align-items: center;
+      min-height: 64px;
+      padding: 0 28px;
+      font-size: 14px;
+      color: var(--text-net-64);
+    }
+
+    .data-row:nth-child(even) {
+      background: var(--row-alt);
+    }
+
+    .data-row:nth-child(odd) {
+      background: var(--surface);
+    }
+
+    .data-row[hidden] {
+      display: none !important;
+    }
+
+    /* padding-left lo ajusta syncCellPaddingToFiltrar() al inicio del pill Filtrar (cabecera centrada) */
+    .cell {
+      padding: 0 8px;
+      box-sizing: border-box;
+    }
+
+    /* padding-left de esta columna: inicio de .title vía syncCellPaddingToFiltrar */
+    .cell--product-desc {
+      min-width: 0;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.35;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      color: #fff;
+      letter-spacing: 0.14px;
+      width: fit-content;
+    }
+
+    .badge--con-error { background: var(--badge-error); }
+    .badge--auditada { background: var(--badge-auditada); }
+    .badge--pendiente { background: var(--badge-pendiente); }
+    .badge--en-auditoria {
+      background: var(--badge-en-auditoria);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* Paginador — Figma Group 15904 (~76px): fondo blanco, Grupo 16245 + página #d6f1ff + selector filas */
+    .table-pagination {
+      min-height: 76px;
+      width: 100%;
+      box-sizing: border-box;
+      border-top: 1px solid var(--divider);
+      background-color: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 40px 14px;
+      flex-shrink: 0;
+    }
+
+    .table-pagination__inner {
+      width: 100%;
+      max-width: 1214px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .table-pagination__pager {
+      position: relative;
+      width: 204px;
+      max-width: 100%;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .table-pagination__pager img {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 204px;
+      height: 11px;
+      display: block;
+      pointer-events: none;
+    }
+
+    .table-pagination__pager .table-pagination__page {
+      position: relative;
+      z-index: 1;
+    }
+
+    .table-pagination__cluster {
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .table-pagination__page {
+      min-width: 24px;
+      height: 26px;
+      padding: 0 6px;
+      border: none;
+      background: transparent;
+      font-family: "Roboto", sans-serif;
+      font-size: 16px;
+      line-height: 26px;
+      color: var(--text-net-100);
+      cursor: default;
+      border-radius: 4px;
+      font-variation-settings: "wdth" 100;
+    }
+
+    .table-pagination__page.is-active {
+      background: #d6f1ff;
+      font-weight: 500;
+    }
+
+    .table-pagination__size {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-width: 74px;
+      height: 44px;
+      padding: 0 14px;
+      box-sizing: border-box;
+      background: var(--surface);
+      border: 1px solid var(--input-border);
+      border-radius: 4px;
+      font-family: "Roboto", sans-serif;
+      font-size: 16px;
+      color: var(--text-net-100);
+      cursor: default;
+      font-variation-settings: "wdth" 100;
+    }
+
+    .table-pagination__size-icon {
+      width: 24px;
+      height: 24px;
+      display: block;
+      flex-shrink: 0;
+      object-fit: contain;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="prototype" id="prototype">
+    <div class="chrome-faux chrome-faux--browser" aria-hidden="true">
+      <img src="assets/chrome-bar.png" alt="" width="1366" height="80" decoding="async" />
+    </div>
+    <div class="chrome-faux chrome-faux--taskbar" aria-hidden="true">
+      <img src="assets/windows-taskbar.png" alt="" width="1366" height="55" decoding="async" />
+    </div>
+
+    <header class="topbar" aria-label="Barra superior WEP">
+      <div class="topbar__stripe"></div>
+      <div class="topbar__main">
+        <div class="topbar__rail">
+          <button type="button" class="topbar__menu" aria-label="Menú">
+            <img src="../assets/SVG%20WEP/Group.svg" alt="" width="24" height="24" decoding="async" />
+          </button>
+        </div>
+        <div class="wep-logo" aria-hidden="true">
+          <img src="../assets/SVG%20WEP/Path%2014035.svg" alt="" width="35" height="26" decoding="async" />
+        </div>
+        <div class="brand-text">
+          <strong>Warehouse</strong>
+          Efficiency and productivity
+        </div>
+        <div class="topbar__spacer"></div>
+        <div class="topbar__tools">
+          <div class="search-pill" role="search">
+            <span>Búsqueda en WEP</span>
+            <img class="search-pill__icon" src="../assets/SVG%20WEP/search.svg" alt="" width="14" height="14" decoding="async" />
+          </div>
+          <button type="button" class="topbar__icon-btn" aria-label="Notificaciones">
+            <img src="../assets/SVG%20WEP/Group%2019508.svg" alt="" width="33" height="32" decoding="async" />
+          </button>
+          <button type="button" class="topbar__icon-btn" aria-label="Ajustes">
+            <img src="../assets/SVG%20WEP/Group%2015874.svg" alt="" width="32" height="32" decoding="async" />
+          </button>
+          <div class="topbar__avatar" aria-hidden="true">
+            <img src="../assets/SVG%20WEP/Group%20avatar.svg" alt="" width="40" height="40" decoding="async" />
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <aside class="sidebar" aria-label="Navegación">
+      <div class="sidebar__rail"></div>
+      <div class="sidebar__active" aria-hidden="true"></div>
+      <div class="sidebar__nav">
+        <div class="sidebar__icons" aria-hidden="true">
+          <img class="sidebar__icon" src="../assets/SVG%20WEP/Group%2015846.svg" alt="" width="40" height="40" decoding="async" />
+          <img class="sidebar__icon" src="../assets/SVG%20WEP/Group%2015847.svg" alt="" width="40" height="40" decoding="async" />
+          <img class="sidebar__icon" src="../assets/SVG%20WEP/Group%2015848.svg" alt="" width="40" height="40" decoding="async" />
+          <img class="sidebar__icon" src="../assets/SVG%20WEP/Group%2015849.svg" alt="" width="40" height="40" decoding="async" />
+          <img class="sidebar__icon" src="../assets/SVG%20WEP/Group%2015850.svg" alt="" width="40" height="40" decoding="async" />
+          <img class="sidebar__icon" src="../assets/SVG%20WEP/Group%2015851.svg" alt="" width="40" height="40" decoding="async" />
+          <img class="sidebar__icon" src="../assets/SVG%20WEP/Group%2015852.svg" alt="" width="40" height="40" decoding="async" />
+          <img class="sidebar__icon" src="../assets/SVG%20WEP/Group%2015853.svg" alt="" width="40" height="40" decoding="async" />
+          <div class="sidebar__icon-slot--current" aria-current="page">
+            <img class="sidebar__icon" src="../assets/SVG%20WEP/Group%2015854.svg" alt="" width="40" height="40" decoding="async" />
+          </div>
+          <img class="sidebar__icon" src="../assets/SVG%20WEP/Group%2015855.svg" alt="" width="40" height="40" decoding="async" />
+          <img class="sidebar__icon" src="../assets/SVG%20WEP/Group%2015856.svg" alt="" width="40" height="40" decoding="async" />
+        </div>
+      </div>
+    </aside>
+
+    <main class="panel">
+      <h1 class="panel__title">Reporte de Auditoría</h1>
+      <hr class="panel__divider" />
+
+      <div class="filters-row">
+        <div class="field-group">
+          <label>Cuenta</label>
+          <div class="select-like">
+            <span>Cuenta principal</span>
+            <img class="select-like__chevron" src="../assets/SVG%20WEP/navigation/expand_more_24px.svg" alt="" width="24" height="24" decoding="async" aria-hidden="true" />
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Ola</label>
+          <div class="select-like">
+            <span>S30</span>
+            <img class="select-like__chevron" src="../assets/SVG%20WEP/navigation/expand_more_24px.svg" alt="" width="24" height="24" decoding="async" aria-hidden="true" />
+          </div>
+        </div>
+        <div class="field-inline">
+          <label>LPN</label>
+          <input class="input-sm" type="text" placeholder="|" />
+        </div>
+        <div class="field-inline">
+          <label>Folio</label>
+          <input class="input-sm" type="text" placeholder="|" />
+        </div>
+        <div class="date-range-picker">
+          <div class="field-inline">
+            <label for="filter-desde">Desde</label>
+            <input
+              class="input-sm input-sm--date-trigger"
+              id="filter-desde"
+              type="text"
+              value="01/03/2026"
+              readonly
+              tabindex="0"
+              aria-expanded="false"
+              aria-haspopup="dialog"
+              aria-controls="date-range-popover"
+            />
+          </div>
+          <div class="field-inline">
+            <label for="filter-hasta">Hasta</label>
+            <input
+              class="input-sm input-sm--date-trigger"
+              id="filter-hasta"
+              type="text"
+              value="01/04/2026"
+              readonly
+              tabindex="0"
+              aria-expanded="false"
+              aria-haspopup="dialog"
+              aria-controls="date-range-popover"
+            />
+          </div>
+          <div
+            class="date-popover"
+            id="date-range-popover"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Seleccionar fecha"
+            hidden
+          >
+            <div class="date-popover__header">
+              <h2 class="date-popover__title" id="date-popover-month-year">Marzo de 2026</h2>
+              <div class="date-popover__nav">
+                <button type="button" class="date-popover__nav-btn" id="date-popover-prev" aria-label="Mes anterior">‹</button>
+                <button type="button" class="date-popover__nav-btn" id="date-popover-next" aria-label="Mes siguiente">›</button>
+              </div>
+            </div>
+            <div class="date-popover__divider" aria-hidden="true"></div>
+            <div class="date-popover__weekdays" aria-hidden="true">
+              <span>Do</span>
+              <span>Lu</span>
+              <span>Ma</span>
+              <span>Mi</span>
+              <span>Ju</span>
+              <span>Vi</span>
+              <span>Sá</span>
+            </div>
+            <div class="date-popover__grid" id="date-popover-grid" role="grid" aria-readonly="true"></div>
+            <div class="date-popover__divider" aria-hidden="true"></div>
+            <div class="date-popover__footer">
+              <button type="button" class="date-popover__link-btn" id="date-popover-today">Hoy</button>
+              <button type="button" class="date-popover__link-btn" id="date-popover-clear">Limpiar</button>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn-buscar" id="btn-buscar">
+          <img class="btn-buscar__icon" src="../assets/SVG%20WEP/search%20cta.svg" alt="" width="16" height="16" decoding="async" />
+          Buscar
+        </button>
+      </div>
+
+      <div class="tarimas-row">
+        <span class="tarimas-row__label">Tarimas:</span>
+        <div class="tarimas-summary">
+          <span>Total esperadas</span>
+          <span class="n" aria-hidden="true">10</span>
+        </div>
+        <div class="quick-filters" role="group" aria-label="Filtros rápidos por estatus">
+          <button type="button" class="quick-filter" data-filter="con-error" id="qf-error" aria-pressed="false">
+            <span class="quick-filter__count">4</span>
+            <span class="quick-filter__text">Con Error</span>
+            <img class="quick-filter__icon" src="../assets/SVG%20WEP/error.svg" alt="" width="24" height="24" decoding="async" aria-hidden="true" />
+          </button>
+          <button type="button" class="quick-filter" data-filter="auditadas" id="qf-auditadas" aria-pressed="false">
+            <span class="quick-filter__count">4</span>
+            <span class="quick-filter__text">Auditadas</span>
+            <img class="quick-filter__icon" src="../assets/SVG%20WEP/check.svg" alt="" width="24" height="24" decoding="async" aria-hidden="true" />
+          </button>
+          <button type="button" class="quick-filter quick-filter--pendientes" data-filter="pendientes" id="qf-pendientes" aria-pressed="false">
+            <span class="quick-filter__count">1</span>
+            <span class="quick-filter__text">Pendientes</span>
+            <span class="quick-filter__icon-inline" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" width="24" height="24" aria-hidden="true" focusable="false"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm120-160h200q17 0 28.5-11.5T560-320q0-17-11.5-28.5T520-360H320q-17 0-28.5 11.5T280-320q0 17 11.5 28.5T320-280Zm0-160h320q17 0 28.5-11.5T680-480q0-17-11.5-28.5T640-520H320q-17 0-28.5 11.5T280-480q0 17 11.5 28.5T320-440Zm0-160h320q17 0 28.5-11.5T680-640q0-17-11.5-28.5T640-680H320q-17 0-28.5 11.5T280-640q0 17 11.5 28.5T320-600Zm181.5-198.5Q510-807 510-820t-8.5-21.5Q493-850 480-850t-21.5 8.5Q450-833 450-820t8.5 21.5Q467-790 480-790t21.5-8.5Z" /></svg>
+            </span>
+          </button>
+          <button type="button" class="quick-filter quick-filter--en-auditoria" data-filter="en-auditoria" id="qf-en-auditoria" aria-pressed="false">
+            <span class="quick-filter__count">1</span>
+            <span class="quick-filter__text">En auditoría</span>
+            <span class="quick-filter__icon-inline" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" width="24" height="24" aria-hidden="true" focusable="false"><path d="M322.5-437.5Q340-455 340-480t-17.5-42.5Q305-540 280-540t-42.5 17.5Q220-505 220-480t17.5 42.5Q255-420 280-420t42.5-17.5Zm200 0Q540-455 540-480t-17.5-42.5Q505-540 480-540t-42.5 17.5Q420-505 420-480t17.5 42.5Q455-420 480-420t42.5-17.5Zm200 0Q740-455 740-480t-17.5-42.5Q705-540 680-540t-42.5 17.5Q620-505 620-480t17.5 42.5Q655-420 680-420t42.5-17.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z" /></svg>
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <div class="table-toolbar">
+        <button type="button" class="table-toolbar__excel" aria-label="Exportar Excel">
+          <img src="../assets/SVG%20WEP/file-excel.svg" alt="" width="22" height="22" decoding="async" />
+        </button>
+        <p class="table-toolbar__hint" id="row-counter" aria-live="polite">Mostrando 1 a 10 de 10 registros</p>
+        <div class="filtro-global">
+          <label for="global-filter">Filtro global</label>
+          <div class="filtro-global__line">
+            <input id="global-filter" type="search" placeholder="" autocomplete="off" />
+            <img class="filtro-global__icon" src="../assets/SVG%20WEP/search_black_24dp%20%281%29.svg" alt="" width="20" height="20" decoding="async" aria-hidden="true" />
+          </div>
+        </div>
+      </div>
+
+      <div class="table-scroll">
+        <div class="table-scroll__inner">
+          <div class="table-head" role="row">
+            <div class="th-cell"><span class="title">Tipo de auditoría</span><span class="th-filtrar">Filtrar</span></div>
+            <div class="th-cell"><span class="title">Ola</span><span class="th-filtrar">Filtrar</span></div>
+            <div class="th-cell"><span class="title">Folio</span><span class="th-filtrar">Filtrar</span></div>
+            <div class="th-cell"><span class="title">LPN</span><span class="th-filtrar">Filtrar</span></div>
+            <div class="th-cell"><span class="title">Estatus</span><span class="th-filtrar">Filtrar</span></div>
+            <div class="th-cell th-cell--product-desc"><span class="title">Descripción de producto</span><span class="th-filtrar">Filtrar</span></div>
+            <div class="th-cell"><span class="title">Fecha</span><span class="th-filtrar">Filtrar</span></div>
+            <div class="th-cell"><span class="title">Cantidad teórica</span><span class="th-filtrar">Filtrar</span></div>
+            <div class="th-cell"><span class="title">Cantidad total</span><span class="th-filtrar">Filtrar</span></div>
+          </div>
+
+          <div class="table-body" id="table-body">
+            <!-- Filas = contenido del frame 1:281 en Figma; data-status para filtrado -->
+            <div class="data-row" data-status="con-error">
+              <div class="cell">Embarque</div>
+              <div class="cell">S30</div>
+              <div class="cell">F0202-S30</div>
+              <div class="cell">SF584</div>
+              <div class="cell"><span class="badge badge--con-error">Con Error</span></div>
+              <div class="cell cell--product-desc">Motor 2.0 L + juntas</div>
+              <div class="cell">28/03/2026</div>
+              <div class="cell">20</div>
+              <div class="cell">22</div>
+            </div>
+            <div class="data-row" data-status="con-error">
+              <div class="cell">Embarque</div>
+              <div class="cell">S30</div>
+              <div class="cell">F0201-S30</div>
+              <div class="cell">SF473</div>
+              <div class="cell"><span class="badge badge--con-error">Con Error</span></div>
+              <div class="cell cell--product-desc">Empaque PET B-441</div>
+              <div class="cell">24/03/2026</div>
+              <div class="cell">24</div>
+              <div class="cell">26</div>
+            </div>
+            <div class="data-row" data-status="con-error">
+              <div class="cell">Embarque</div>
+              <div class="cell">S30</div>
+              <div class="cell">F0200-S30</div>
+              <div class="cell">SF584</div>
+              <div class="cell"><span class="badge badge--con-error">Con Error</span></div>
+              <div class="cell cell--product-desc">Sensor M12 IP67</div>
+              <div class="cell">22/03/2026</div>
+              <div class="cell">20</div>
+              <div class="cell">22</div>
+            </div>
+            <div class="data-row" data-status="con-error">
+              <div class="cell">Embarque</div>
+              <div class="cell">S30</div>
+              <div class="cell">F0199-S30</div>
+              <div class="cell">SF473</div>
+              <div class="cell"><span class="badge badge--con-error">Con Error</span></div>
+              <div class="cell cell--product-desc">Aceite VG 46, 20 L</div>
+              <div class="cell">20/03/2026</div>
+              <div class="cell">24</div>
+              <div class="cell">26</div>
+            </div>
+            <div class="data-row" data-status="auditada">
+              <div class="cell">Embarque</div>
+              <div class="cell">S30</div>
+              <div class="cell">F0198-S30</div>
+              <div class="cell">SF584</div>
+              <div class="cell"><span class="badge badge--auditada">Auditada</span></div>
+              <div class="cell cell--product-desc">Rodamiento 6205-2RS</div>
+              <div class="cell">18/03/2026</div>
+              <div class="cell">20</div>
+              <div class="cell">20</div>
+            </div>
+            <div class="data-row" data-status="auditada">
+              <div class="cell">Embarque</div>
+              <div class="cell">S30</div>
+              <div class="cell">F0197-S30</div>
+              <div class="cell">SF473</div>
+              <div class="cell"><span class="badge badge--auditada">Auditada</span></div>
+              <div class="cell cell--product-desc">Etiqueta 102×152 mm</div>
+              <div class="cell">16/03/2026</div>
+              <div class="cell">24</div>
+              <div class="cell">24</div>
+            </div>
+            <div class="data-row" data-status="auditada">
+              <div class="cell">Embarque</div>
+              <div class="cell">S30</div>
+              <div class="cell">F0196-S30</div>
+              <div class="cell">SF584</div>
+              <div class="cell"><span class="badge badge--auditada">Auditada</span></div>
+              <div class="cell cell--product-desc">Correa SPB 2000</div>
+              <div class="cell">14/03/2026</div>
+              <div class="cell">20</div>
+              <div class="cell">20</div>
+            </div>
+            <div class="data-row" data-status="auditada">
+              <div class="cell">Embarque</div>
+              <div class="cell">S30</div>
+              <div class="cell">F0195-S30</div>
+              <div class="cell">SF473</div>
+              <div class="cell"><span class="badge badge--auditada">Auditada</span></div>
+              <div class="cell cell--product-desc">Filtro G4 595 mm</div>
+              <div class="cell">12/03/2026</div>
+              <div class="cell">24</div>
+              <div class="cell">24</div>
+            </div>
+            <div class="data-row" data-status="pendiente">
+              <div class="cell">Embarque</div>
+              <div class="cell">S30</div>
+              <div class="cell">F0194-S30</div>
+              <div class="cell">SF584</div>
+              <div class="cell"><span class="badge badge--pendiente">Pendiente</span></div>
+              <div class="cell cell--product-desc">Pallet EUR 800×1200</div>
+              <div class="cell">10/03/2026</div>
+              <div class="cell">20</div>
+              <div class="cell">20</div>
+            </div>
+            <div class="data-row" data-status="en-auditoria">
+              <div class="cell">Embarque</div>
+              <div class="cell">S30</div>
+              <div class="cell">F0193-S30</div>
+              <div class="cell">SF473</div>
+              <div class="cell"><span class="badge badge--en-auditoria">En Auditoría</span></div>
+              <div class="cell cell--product-desc">Válvula 1/2&quot; 24 VDC</div>
+              <div class="cell">08/03/2026</div>
+              <div class="cell">24</div>
+              <div class="cell">24</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="table-pagination" aria-label="Paginación de resultados">
+        <div class="table-pagination__inner">
+          <div class="table-pagination__cluster">
+            <div class="table-pagination__pager">
+              <img src="../assets/SVG%20WEP/Grupo%2016245.svg" alt="" width="204" height="11" decoding="async" aria-hidden="true" />
+              <button type="button" class="table-pagination__page is-active" aria-current="page" disabled>1</button>
+            </div>
+            <div class="table-pagination__size" title="Registros por página">
+              10
+              <img class="table-pagination__size-icon" src="../assets/SVG%20WEP/navigation/expand_more_24px.svg" alt="" width="24" height="24" decoding="async" aria-hidden="true" />
+            </div>
+          </div>
+        </div>
+      </nav>
+    </main>
+  </div>
+
+  <script>
+(function () {
+  var FILTER_MAP = {
+    pendientes: ["pendiente"],
+    auditadas: ["auditada"],
+    "con-error": ["con-error"],
+    "en-auditoria": ["en-auditoria"]
+  };
+
+  var rows = Array.prototype.slice.call(document.querySelectorAll(".data-row"));
+  var buttons = Array.prototype.slice.call(document.querySelectorAll(".quick-filter"));
+  var counter = document.getElementById("row-counter");
+  var total = rows.length;
+  var activeFilter = null;
+
+  function countVisible() {
+    return rows.filter(function (r) { return !r.hidden; }).length;
+  }
+
+  function setCounterAll() {
+    counter.textContent = "Mostrando 1 a " + total + " de " + total + " registros";
+  }
+
+  function updateCounterFiltered() {
+    var n = countVisible();
+    if (n === 0) {
+      counter.textContent = "Sin registros para el filtro seleccionado";
+      return;
+    }
+    counter.textContent = "Mostrando " + n + " de " + total + " registros";
+  }
+
+  function clearChipActive() {
+    buttons.forEach(function (b) {
+      b.classList.remove("is-active");
+      b.setAttribute("aria-pressed", "false");
+    });
+    activeFilter = null;
+  }
+
+  function showAllRows() {
+    rows.forEach(function (row) {
+      row.hidden = false;
+    });
+  }
+
+  function applyFilter(key) {
+    var allowed = FILTER_MAP[key];
+    rows.forEach(function (row) {
+      var st = row.getAttribute("data-status");
+      row.hidden = allowed.indexOf(st) === -1;
+    });
+    updateCounterFiltered();
+  }
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var key = btn.getAttribute("data-filter");
+      if (btn.classList.contains("is-active") && activeFilter === key) {
+        clearChipActive();
+        showAllRows();
+        setCounterAll();
+        return;
+      }
+      clearChipActive();
+      btn.classList.add("is-active");
+      btn.setAttribute("aria-pressed", "true");
+      activeFilter = key;
+      applyFilter(key);
+    });
+  });
+
+  function startOfDay(d) {
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  }
+
+  function parseDdMmYyyy(str) {
+    if (!str || typeof str !== "string") return null;
+    var m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(str.trim());
+    if (!m) return null;
+    var day = parseInt(m[1], 10);
+    var month = parseInt(m[2], 10) - 1;
+    var year = parseInt(m[3], 10);
+    var dt = new Date(year, month, day);
+    if (dt.getFullYear() !== year || dt.getMonth() !== month || dt.getDate() !== day) return null;
+    return startOfDay(dt);
+  }
+
+  function formatDdMmYyyy(d) {
+    var day = String(d.getDate()).padStart(2, "0");
+    var month = String(d.getMonth() + 1).padStart(2, "0");
+    return day + "/" + month + "/" + d.getFullYear();
+  }
+
+  function addDays(d, n) {
+    var x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    x.setDate(x.getDate() + n);
+    return x;
+  }
+
+  function applyBuscarDates() {
+    var inputDesde = document.getElementById("filter-desde");
+    var inputHasta = document.getElementById("filter-hasta");
+    if (!inputDesde || !inputHasta) return;
+    var desde = parseDdMmYyyy(inputDesde.value);
+    var hasta = parseDdMmYyyy(inputHasta.value);
+    if (!desde || !hasta) return;
+    if (hasta.getTime() < desde.getTime()) {
+      var swap = desde;
+      desde = hasta;
+      hasta = swap;
+    }
+    var nRows = rows.length;
+    if (nRows === 0) return;
+    var daysTotal = Math.round((hasta.getTime() - desde.getTime()) / 86400000);
+    var FECHA_IDX = 6;
+    for (var i = 0; i < nRows; i++) {
+      var cells = rows[i].querySelectorAll(".cell");
+      if (cells.length <= FECHA_IDX) continue;
+      var cellDate;
+      if (nRows === 1) {
+        cellDate = hasta;
+      } else {
+        var offset = Math.round((daysTotal * (nRows - 1 - i)) / (nRows - 1));
+        cellDate = addDays(desde, offset);
+      }
+      cells[FECHA_IDX].textContent = formatDdMmYyyy(cellDate);
+    }
+    if (activeFilter) {
+      applyFilter(activeFilter);
+    } else {
+      setCounterAll();
+    }
+  }
+
+  var btnBuscar = document.getElementById("btn-buscar");
+  if (btnBuscar) {
+    btnBuscar.addEventListener("click", applyBuscarDates);
+  }
+
+  showAllRows();
+  setCounterAll();
+})();
+
+(function () {
+  function syncCellPaddingToFiltrar() {
+    var headCells = document.querySelectorAll(".table-head .th-cell");
+    var firstRow = document.querySelector(".data-row");
+    if (!headCells.length || !firstRow) return;
+    var sampleCells = firstRow.querySelectorAll(".cell");
+    var n = Math.min(headCells.length, sampleCells.length);
+    for (var i = 0; i < n; i++) {
+      var th = headCells[i];
+      var alignEl = th.classList.contains("th-cell--product-desc")
+        ? th.querySelector(".title")
+        : th.querySelector(".th-filtrar");
+      if (!alignEl) continue;
+      var pad = Math.round(
+        alignEl.getBoundingClientRect().left - sampleCells[i].getBoundingClientRect().left
+      );
+      if (pad < 0) pad = 0;
+      var sel = ".data-row .cell:nth-child(" + (i + 1) + ")";
+      document.querySelectorAll(sel).forEach(function (cell) {
+        cell.style.paddingLeft = pad + "px";
+        cell.style.paddingRight = "8px";
+      });
+    }
+  }
+
+  function runSync() {
+    requestAnimationFrame(function () {
+      requestAnimationFrame(syncCellPaddingToFiltrar);
+    });
+  }
+
+  window.addEventListener("resize", runSync);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(runSync);
+  }
+  runSync();
+})();
+
+(function () {
+  var picker = document.querySelector(".date-range-picker");
+  if (!picker) return;
+
+  var inputDesde = document.getElementById("filter-desde");
+  var inputHasta = document.getElementById("filter-hasta");
+  var popover = document.getElementById("date-range-popover");
+  var titleEl = document.getElementById("date-popover-month-year");
+  var gridEl = document.getElementById("date-popover-grid");
+  var btnPrev = document.getElementById("date-popover-prev");
+  var btnNext = document.getElementById("date-popover-next");
+  var btnToday = document.getElementById("date-popover-today");
+  var btnClear = document.getElementById("date-popover-clear");
+
+  var viewYear;
+  var viewMonth;
+  var activeField = null;
+
+  function startOfDay(d) {
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  }
+
+  function isSameDay(a, b) {
+    return startOfDay(a).getTime() === startOfDay(b).getTime();
+  }
+
+  function timeDay(d) {
+    return startOfDay(d).getTime();
+  }
+
+  function addDays(d, n) {
+    var x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    x.setDate(x.getDate() + n);
+    return x;
+  }
+
+  function getDesdeDate() {
+    return parseDdMmYyyy(inputDesde.value);
+  }
+
+  function isHastaDayDisabled(cellDate) {
+    var desde = getDesdeDate();
+    if (!desde) return false;
+    return timeDay(cellDate) <= timeDay(desde);
+  }
+
+  function parseDdMmYyyy(str) {
+    if (!str || typeof str !== "string") return null;
+    var m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(str.trim());
+    if (!m) return null;
+    var day = parseInt(m[1], 10);
+    var month = parseInt(m[2], 10) - 1;
+    var year = parseInt(m[3], 10);
+    var d = new Date(year, month, day);
+    if (d.getFullYear() !== year || d.getMonth() !== month || d.getDate() !== day) return null;
+    return startOfDay(d);
+  }
+
+  function formatDdMmYyyy(d) {
+    var day = String(d.getDate()).padStart(2, "0");
+    var month = String(d.getMonth() + 1).padStart(2, "0");
+    return day + "/" + month + "/" + d.getFullYear();
+  }
+
+  function capitalizeMonthTitle(s) {
+    if (!s) return s;
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
+  function updateTitle() {
+    var fmt = new Intl.DateTimeFormat("es", { month: "long", year: "numeric" });
+    titleEl.textContent = capitalizeMonthTitle(fmt.format(new Date(viewYear, viewMonth, 1)));
+  }
+
+  function getHighlightDate() {
+    if (activeField === "hasta") return parseDdMmYyyy(inputHasta.value);
+    if (activeField === "desde") return parseDdMmYyyy(inputDesde.value);
+    return null;
+  }
+
+  function applyDayClasses(btn, cellDate, inCurrentMonth, hastaDisabled) {
+    var classes = ["date-popover__day"];
+    if (!inCurrentMonth) classes.push("is-outside-month");
+
+    var now = new Date();
+    if (isSameDay(cellDate, now)) classes.push("is-today");
+
+    var hi = getHighlightDate();
+    if (hi && isSameDay(cellDate, hi)) classes.push("is-selected");
+
+    if (hastaDisabled) classes.push("is-disabled");
+
+    btn.className = classes.join(" ");
+  }
+
+  function renderGrid() {
+    gridEl.innerHTML = "";
+    var first = new Date(viewYear, viewMonth, 1);
+    var startPad = first.getDay();
+    var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+    var prevMonthDays = new Date(viewYear, viewMonth, 0).getDate();
+
+    for (var i = 0; i < 42; i++) {
+      var cellDate;
+      var inCurrentMonth = true;
+      if (i < startPad) {
+        var pDay = prevMonthDays - startPad + i + 1;
+        cellDate = new Date(viewYear, viewMonth - 1, pDay);
+        inCurrentMonth = false;
+      } else if (i < startPad + daysInMonth) {
+        var cDay = i - startPad + 1;
+        cellDate = new Date(viewYear, viewMonth, cDay);
+      } else {
+        var nDay = i - startPad - daysInMonth + 1;
+        cellDate = new Date(viewYear, viewMonth + 1, nDay);
+        inCurrentMonth = false;
+      }
+
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = String(cellDate.getDate());
+      btn.setAttribute("role", "gridcell");
+      var iso =
+        cellDate.getFullYear() +
+        "-" +
+        String(cellDate.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(cellDate.getDate()).padStart(2, "0");
+      btn.dataset.date = iso;
+
+      var hastaDisabled = activeField === "hasta" && isHastaDayDisabled(cellDate);
+      applyDayClasses(btn, cellDate, inCurrentMonth, hastaDisabled);
+      if (hastaDisabled) {
+        btn.disabled = true;
+        btn.setAttribute("aria-disabled", "true");
+      }
+
+      if (!hastaDisabled) {
+        btn.addEventListener("click", function (d) {
+          return function () {
+            onPickDay(d);
+          };
+        }(startOfDay(cellDate)));
+      }
+
+      gridEl.appendChild(btn);
+    }
+  }
+
+  function onPickDay(d) {
+    if (activeField === "hasta") {
+      if (isHastaDayDisabled(d)) return;
+      inputHasta.value = formatDdMmYyyy(d);
+    } else {
+      var picked = startOfDay(d);
+      inputDesde.value = formatDdMmYyyy(picked);
+      var hasta = parseDdMmYyyy(inputHasta.value);
+      if (hasta && timeDay(hasta) <= timeDay(picked)) {
+        inputHasta.value = formatDdMmYyyy(addDays(picked, 1));
+      }
+    }
+    closePopover();
+  }
+
+  function render() {
+    updateTitle();
+    renderGrid();
+  }
+
+  function setExpanded(open, field) {
+    inputDesde.setAttribute("aria-expanded", open && field === "desde" ? "true" : "false");
+    inputHasta.setAttribute("aria-expanded", open && field === "hasta" ? "true" : "false");
+  }
+
+  function openPopover(field) {
+    activeField = field;
+    var ref;
+    if (field === "hasta") {
+      var desde = getDesdeDate();
+      var hasta = parseDdMmYyyy(inputHasta.value);
+      if (desde) {
+        var minHasta = addDays(desde, 1);
+        if (hasta && timeDay(hasta) > timeDay(desde)) {
+          ref = hasta;
+        } else {
+          ref = minHasta;
+        }
+      } else {
+        ref = hasta || new Date();
+      }
+    } else {
+      ref = parseDdMmYyyy(inputDesde.value) || new Date();
+    }
+    viewYear = ref.getFullYear();
+    viewMonth = ref.getMonth();
+    popover.hidden = false;
+    setExpanded(true, field);
+    render();
+  }
+
+  function closePopover() {
+    popover.hidden = true;
+    activeField = null;
+    setExpanded(false, null);
+  }
+
+  function toggleField(field) {
+    if (!popover.hidden && activeField === field) {
+      closePopover();
+      return;
+    }
+    openPopover(field);
+  }
+
+  function onToday() {
+    var t = startOfDay(new Date());
+    if (activeField === "hasta") {
+      var desde = getDesdeDate();
+      if (desde && timeDay(t) <= timeDay(desde)) {
+        t = addDays(desde, 1);
+      }
+      viewYear = t.getFullYear();
+      viewMonth = t.getMonth();
+      inputHasta.value = formatDdMmYyyy(t);
+    } else {
+      viewYear = t.getFullYear();
+      viewMonth = t.getMonth();
+      inputDesde.value = formatDdMmYyyy(t);
+      var hasta = parseDdMmYyyy(inputHasta.value);
+      if (hasta && timeDay(hasta) <= timeDay(t)) {
+        inputHasta.value = formatDdMmYyyy(addDays(t, 1));
+      }
+    }
+    render();
+  }
+
+  function onClear() {
+    if (activeField === "hasta") {
+      inputHasta.value = "";
+    } else {
+      inputDesde.value = "";
+    }
+    closePopover();
+  }
+
+  function initViewFromInputs() {
+    var a = parseDdMmYyyy(inputDesde.value);
+    var b = parseDdMmYyyy(inputHasta.value);
+    var ref = b || a || new Date();
+    viewYear = ref.getFullYear();
+    viewMonth = ref.getMonth();
+  }
+
+  initViewFromInputs();
+
+  function makeTriggerHandler(field) {
+    return function (e) {
+      if (e.type === "keydown" && e.key !== "Enter" && e.key !== " ") return;
+      if (e.type === "keydown" && (e.key === "Enter" || e.key === " ")) e.preventDefault();
+      e.stopPropagation();
+      toggleField(field);
+    };
+  }
+
+  inputDesde.addEventListener("click", makeTriggerHandler("desde"));
+  inputHasta.addEventListener("click", makeTriggerHandler("hasta"));
+  inputDesde.addEventListener("keydown", makeTriggerHandler("desde"));
+  inputHasta.addEventListener("keydown", makeTriggerHandler("hasta"));
+
+  btnPrev.addEventListener("click", function () {
+    viewMonth--;
+    if (viewMonth < 0) {
+      viewMonth = 11;
+      viewYear--;
+    }
+    render();
+  });
+
+  btnNext.addEventListener("click", function () {
+    viewMonth++;
+    if (viewMonth > 11) {
+      viewMonth = 0;
+      viewYear++;
+    }
+    render();
+  });
+
+  btnToday.addEventListener("click", onToday);
+  btnClear.addEventListener("click", onClear);
+
+  document.addEventListener("mousedown", function (e) {
+    if (popover.hidden) return;
+    if (!picker.contains(e.target)) closePopover();
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !popover.hidden) {
+      closePopover();
+    }
+  });
+})();
+  </script>
+</body>
+</html>

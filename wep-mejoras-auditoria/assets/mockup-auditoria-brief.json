@@ -1,0 +1,48 @@
+{
+  "canvas": { "aspectRatio": "16:9", "exportWidth": 1920, "exportHeight": 1080 },
+  "palette": {
+    "shell": "#333e48",
+    "accentRed": "#e53935",
+    "ctaBlue": "#1e88e5",
+    "contentBg": "#f0f2f4",
+    "surface": "#ffffff",
+    "textPrimary": "#2d3748",
+    "textMuted": "#718096",
+    "border": "#e2e8f0",
+    "zebra": "#f7fafc",
+    "activeBar": "#1e88e5"
+  },
+  "typography": {
+    "family": "system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
+    "titlePage": "600 22px",
+    "headerBrand": "700 18px / 400 12px"
+  },
+  "layout": {
+    "topBarHeight": 56,
+    "sidebarWidth": 56,
+    "radiusPill": 999,
+    "radiusControl": 10,
+    "radiusButton": 8
+  },
+  "page": {
+    "title": "Auditoría",
+    "filters": [
+      { "label": "Fecha de auditoría", "placeholder": "Seleccionar rango" },
+      { "label": "Auditor", "placeholder": "Todos los auditores" },
+      { "label": "Estado", "placeholder": "Todos" }
+    ],
+    "tableColumns": [
+      "ID auditoría",
+      "Fecha",
+      "Auditor",
+      "Referencia",
+      "Estado",
+      "Acciones"
+    ],
+    "sampleRows": [
+      ["AUD-2025-0142", "18/03/2025", "María López", "INV-BODEGA-A", "Pendiente"],
+      ["AUD-2025-0141", "17/03/2025", "Carlos Ruiz", "REC-88921", "Completada"],
+      ["AUD-2025-0140", "15/03/2025", "Ana Torres", "TRF-5520", "Pendiente"]
+    ]
+  }
+}
