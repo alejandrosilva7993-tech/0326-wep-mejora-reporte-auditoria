@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WEP — Reporte de Auditoría</title>
+  <script>
+(function () {
+  var flat = "mockups/reporte-auditoria-filtros.html";
+  var nested = "wep-mejoras-auditoria/mockups/reporte-auditoria-filtros.html";
+  if (location.protocol === "file:") {
+    window.location.replace(flat);
+    return;
+  }
+  var path = location.pathname;
+  var dir = path.replace(/\/?index\.html?$/i, "");
+  if (!dir.endsWith("/")) dir += "/";
+  var baseUrl = location.origin + dir;
+  fetch(baseUrl + flat, { method: "HEAD", redirect: "follow", cache: "no-store" })
+    .then(function (res) {
+      if (res.ok) {
+        window.location.replace(flat);
+      } else {
+        window.location.replace(nested);
+      }
+    })
+    .catch(function () {
+      window.location.replace(nested);
+    });
+})();
+  </script>
+</head>
+<body>
+  <p>Cargando maqueta…</p>
+  <noscript>
+    <p>
+      <a href="mockups/reporte-auditoria-filtros.html">Abrir maqueta (repo plano)</a>
+      ·
+      <a href="wep-mejoras-auditoria/mockups/reporte-auditoria-filtros.html">Abrir maqueta (subcarpeta en GitHub)</a>
+    </p>
+  </noscript>
+</body>
+</html>
